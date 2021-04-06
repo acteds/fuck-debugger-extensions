@@ -1,6 +1,6 @@
 # fuck-debugger-extensions
 
-简体中文 | [English](README.en-US)
+简体中文 | [English](README.en-US.md)
 
 ## 简介
 这个拓展是一个 反反反调试框架 
