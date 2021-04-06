@@ -102,8 +102,15 @@ function core(e,window) {
     });
     RegExp.toString = oldRegExp.toString.bind(oldRegExp)
   }
-
+  // todo Keep one hand
+_console = {};
   if (e["config-hook-console"]) {
+    _console = {
+      log: console.log,
+      info: console.info,
+      warn: console.warn,
+      error: console.error
+    };
     // hook console
     var oldConsole = ["debug", "error", "info", "log", "warn", "dir", "dirxml", "table", "trace", "group", "groupCollapsed", "groupEnd", "clear", "count", "countReset", "assert", "profile", "profileEnd", "time", "timeLog", "timeEnd", "timeStamp", "context", "memory"].map(key => {
       var old = console[key];
