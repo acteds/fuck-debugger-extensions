@@ -1,136 +1,134 @@
 # fuck-debugger-extensions
 
-English | [简体中文](README.zh-CN.md)
+简体中文 | [English](README.en-US)
 
-## Introduction
-This extension is an anti-anti-debugging framework
+## 简介
+这个拓展是一个 反反反调试框架 
 
-When I saw a beautiful piece of code, I found that an anti-debugging.
+当看到一段漂亮代码的时候 发现有反调试 卡浏览器 死机 这个时候就很不爽了。
 
-crashed!!!
-
-Having this plugin can solve the problem invisibly.
+拥有这个插件 就可以解决问题于无形之中。
 
 
-## Main problem solving
-1. Console devtool detection
-2. PushState crash browser
-3. debugger crash browser and detects devtool
-4. regexp code style detection
-   
+## 主要解决问题
+1. 基于console的devtool检测
+2. 基于pushState的卡浏览器
+3. 基于debugger的卡浏览器 检测devtool
+4. 基于regexp的代码风格检测
+   
+## 当hook console时保存一个_console副本
 
 
-## install and use
+## 安装和使用
 
-### download
+### 下载
 ```
 cd ~
-git clone https://github.com/546669204/fuck-debugger-extensions.git
+git clone git@github.com:acteds/fuck-debugger-extensions.git
 
 ```
 
-### install
+### 安装  
 
-```markdown
+```markdown  
 1. Navigate to chrome://extensions in your browser. You can also access this page by clicking on the Chrome menu on the top right side of the Omnibox, hovering over   **More Tools** and selecting **Extensions**.  
 2. Check the box next to **Developer Mode**.  
 3. Click **Load Unpacked Extension** and select the directory for your "Hello Extensions" extension.
 
 Congratulations! 
 ```
-### use  
+### 使用  
 
-Find the extension on the right side of the address bar. Click Configure.
+地址栏右侧找到拓展 点击 配置 功能选项 刷新即可
 
-Shortcut **Alt + Shift + D** Enable request interception
+快捷键 **Alt+Shift+D** 开启请求拦截功能 
 
 
 
-## Detailed explanation
+## 原理详解
 
-### `Use console.log to determine whether to open the developer tools`
+### `使用console.log来判断是否打开开发者工具`
 ```javascript
-//method 1
-var x = document.createElement ('div');
-Object.defineProperty (x, 'id', {
-    get: function () {
-        // developer tools are opened
-    }
+//方法1
+var x = document.createElement('div');
+Object.defineProperty(x, 'id', {
+    get:function(){
+        // 开发者工具被打开
+    }
 });
-console.log (x);
-// Method 2
-var c = new RegExp ("1");
-c.toString = function () {
-  // developer tools are opened
+console.log(x);
+//方法2
+var c = new RegExp("1");
+c.toString = function(){
+  // 开发者工具被打开
 }
-console.log (c);
+console.log(c);
 ```
-Hook the console object directly to invalidate all output
+直接hook console 对象 让所有输出失效  
 
 
 -----
-### `Use the debugger statement to determine whether to open the developer tools and the infinite loop debugger crash machine`
+### `使用debugger语句判断是否打开开发者工具 和 无限循环debugger卡机`
 ```javascript
-var startTime = new Date ();
+var startTime = new Date();
 debugger;
-var endTime = new Date ();
-var isDev = endTime-startTime> 100;// developer tools are opened
+var endTime = new Date();
+var isDev = endTime - startTime >100;
 
-while (true) {
-  debugger;
+while(true){
+  debugger;
 }
 
-// Another implementation of debugger
-(function () {}). constructor ("debugger") ()
+// debugger 的另一种实现方式
+(function(){}).constructor("debugger")()
 
 ```
-Static debugger
-Use the chrome protocol to intercept all requests, modify the return value.
+静态debugger  
+使用chrome protocol 拦截所有请求 修改返回值
 
-Dynamic debugger
-Hooked Function.protype.constructor to replace all debugger characters
+动态debugger  
+hook 了 Function.protype.constructor 替换所有的debugger 字符
 
 ---
-### `Regexp code format detection`
+### `基于regexp的代码格式化检测`
 ```javascript
 new RegExp(`\\w+ *\\(\\) *{\\w+ *['|"].+['|"];? *}`).test((function(){return "dev"}).toString())
 ```
-The current solution is to hook regexp when the apply function is triggered, the parameter is equal to the given value and return an empty regexp
+目前的解决方案是 hook regexp 当触发apply函数的时候 参数等于给定值 返回空regexp  
 
 ----
 
 ### chrome protocol
 
-Approximate process
-1. chrome.debugger.attach injects the specified tabId
-2. Listen for chrome.debugger.onEvent to get the return value
-3. Send Fetch.enable to enable the request interceptor
-4. Modify the response in the event Fetch.requestPaused to return the result
-5. OK!
-   
-This feature uses chrome **experimental features** requires a new version of chrome
+大概流程
+1. chrome.debugger.attach 注入指定tabId
+2. 监听chrome.debugger.onEvent 获取返回值
+3. 发送 Fetch.enable 开启请求拦截器
+4. 在事件 Fetch.requestPaused 中修改 response 返回结果
+5. OK！
+   
+该功能使用了chrome **实验特性** 需要新版chrome
 
-You can do more with the chrome protocol
+利用 **chrome protocol** 还能做到更多
+
+## 其他
 
 
-## other
+如果在使用中遇到问题和建议可以提issuse与我们进行联系; 
 
-
-If you encounter problems and suggestions during use, you can contact us with issuse;
-
-If there are better ideas, you can get involved.
+如果有更好的想法可以参与进来。  
 
 ---
 
 
-The project does not advocate cracking others' projects for profit. For academic research use only.
+该项目不倡导去破解他人项目来谋取利益。仅做学术研究使用。
 
-After all the code runs on the client. If it's valuable, just work hard. All can be broken.
+毕竟代码运行在客户端。如果有价值，只要花功夫。都是可以被人攻破的。
 
-It is recommended to put unimportant code on the client.
+建议把不重要的代码放在客户端。
 
 
-## references
+## 参考文献
 
 https://developer.chrome.com/extensions
 
