@@ -42,7 +42,7 @@ function core( e, window ) {
       configurable: true
     } )
 
-    // hook Async Function 
+    // hook Async Function
     var oldAsyncFunctionConstructor = Object.getPrototypeOf( async function() {} ).constructor
     var newAsyncFunctionConstructor = Closure( oldAsyncFunctionConstructor )
     newAsyncFunctionConstructor.toString = oldAsyncFunctionConstructor.toString.bind( oldAsyncFunctionConstructor );
